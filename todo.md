@@ -1,0 +1,33 @@
+# Project TODO
+
+- [x] Establish role-gated admin dashboard access and admin-only mutations
+- [x] Add editable department master data for CSE, CSE AIML, IT, ECE, ME, EEE, and EE
+- [x] Add editable lab room master data with room numbers, capacities, and active status
+- [x] Add editable practical master data and department-wise allocations
+- [x] Implement MongoDB-compatible operational data model and CRUD backend contracts
+- [x] Seed the initial four-day weekly routine with at least four practical sessions
+- [x] Add conflict-aware scheduling checks for room/time clashes and capacity mismatches
+- [x] Build interactive weekly calendar and routine editor
+- [x] Support create, update, reschedule, and remove allocation workflows
+- [x] Add secure routine PDF upload and persistent import records with external file references
+- [x] Add admin review and apply workflow for uploaded routine updates
+- [x] Add server-side AI scheduling proposal workflow using configured API keys
+- [x] Ensure AI proposals explain decisions and require admin review before application
+- [x] Implement modern isometric teal/blue/coral visual system with grid texture and geometric depth
+- [x] Write and run Vitest coverage for backend scheduling and authorization behavior
+- [x] Verify responsive UI, API behavior, and production build
+- [ ] Save final checkpoint and deliver the project version
+- [x] Add development-safe local data adapter while preserving a production MongoDB repository boundary
+- [x] Document that a reachable remote MONGODB_URI is required before production MongoDB persistence is enabled
+- [x] Add practical CRUD methods, procedures, and UI for editable practical metadata
+- [x] Expose and persist room active/inactive status toggles
+- [x] Add edit/reschedule controls for existing allocations
+- [x] Add import review parsing/apply procedures for uploaded routine updates
+- [x] Enforce persisted AI proposal review server-side before apply
+- [x] Add Vitest coverage for conflict detection and admin authorization
+- [x] Run production build and browser-verify success/error API flows
+- [x] Add practical deletion support in store, router, and admin UI
+- [x] Generate PDF import review records with proposed allocation updates and apply them only after admin approval
+- [ ] Browser-test room save, conflict save, PDF validation, and AI review/apply success/error paths (blocked by sign-in human verification)
+- [x] Derive proposed allocation updates from uploaded PDF text instead of hardcoded draft data
+- [x] Test PDF import parsing, review/apply behavior, and invalid-document errors

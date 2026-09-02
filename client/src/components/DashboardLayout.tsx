@@ -21,15 +21,18 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { Bot, CalendarDays, Database, FileUp, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Command center", path: "/" },
+  { icon: CalendarDays, label: "Weekly routine", path: "/?tab=calendar" },
+  { icon: Database, label: "Operational data", path: "/?tab=master" },
+  { icon: FileUp, label: "Routine imports", path: "/?tab=imports" },
+  { icon: Bot, label: "AI proposals", path: "/?tab=agent" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -75,6 +78,17 @@ export default function DashboardLayout({
           >
             Sign in
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (user.role !== "admin") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6 text-white">
+        <div className="max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
+          <h1 className="text-2xl font-black">Administrator access required</h1>
+          <p className="mt-3 text-sm leading-6 text-slate-300">Your account is authenticated but is not assigned the admin role needed to edit lab routines and operational data.</p>
         </div>
       </div>
     );
@@ -169,7 +183,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    Lab allocator
                   </span>
                 </div>
               ) : null}
@@ -213,7 +227,7 @@ function DashboardLayoutContent({
                       {user?.name || "-"}
                     </p>
                     <p className="text-xs text-muted-foreground truncate mt-1.5">
-                      {user?.email || "-"}
+                      {user?.role === "admin" ? "Administrator" : "Read-only access"}
                     </p>
                   </div>
                 </button>
