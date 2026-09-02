@@ -103,7 +103,7 @@
 - [x] Replace admin-only backend guards with public-access procedures across tRPC and REST
 - [x] Add tests proving unauthenticated visitors can load and use the public workspace and execute representative actions
 - [x] Update public-access documentation and security notes
-- [ ] Verify public preview and save a new checkpoint
+- [x] Verify public preview and save a new checkpoint
 
 # Public Access Hardening
 
