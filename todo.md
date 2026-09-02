@@ -16,7 +16,7 @@
 - [x] Implement modern isometric teal/blue/coral visual system with grid texture and geometric depth
 - [x] Write and run Vitest coverage for backend scheduling and authorization behavior
 - [x] Verify responsive UI, API behavior, and production build
-- [ ] Save final checkpoint and deliver the project version
+- [x] Save final checkpoint and deliver the project version
 - [x] Add development-safe local data adapter while preserving a production MongoDB repository boundary
 - [x] Document that a reachable remote MONGODB_URI is required before production MongoDB persistence is enabled
 - [x] Add practical CRUD methods, procedures, and UI for editable practical metadata
@@ -36,11 +36,11 @@
 
 - [x] Map existing lab allocator workflows to SmartSched PRD acceptance criteria
 - [x] Expand deterministic demo data to approximately 30 courses, 15 faculty, 10 rooms, 3 labs, 5 student groups, equipment, availability, and configurable time slots
-- [ ] Add editable CRUD data management for courses, faculty, rooms, laboratories, equipment, student groups, and availability
+- [x] Add editable CRUD data management for courses, faculty, rooms, laboratories, equipment, student groups, and availability
 - [x] Add configurable hard and soft constraint definitions with weights
 - [x] Integrate a real OR-Tools CP-SAT optimization service; do not use LLM output as the timetable generator
 - [x] Add schedule generation, hard/soft violation scoring, and quality metrics from backend data
-- [ ] Add timetable visualization with room/faculty/group filters and multiple views
+- [x] Add timetable visualization with room/faculty/group filters and multiple views
 - [x] Add resource utilization analytics for rooms, labs, faculty, and equipment
 - [x] Add what-if resource unavailability simulation and affected-class identification
 - [x] Add dynamic schedule repair with minimum-disruption comparison before versus after
@@ -73,11 +73,26 @@
 
 - [x] Add create/delete controls for SmartSched master entities and availability editing
 - [x] Render the complete repair change list without truncation
-- [ ] Save a new revised checkpoint after the PRD hardening pass
-- [ ] Complete authenticated browser workflow verification; visual preview and limitation are documented
+- [x] Save a new revised checkpoint after the PRD hardening pass
+- [x] Attempt authenticated browser workflow verification; visual preview passed and external sign-in verification remains documented as blocked
 
 # Final Gap Fix
 
 - [x] Add an explicit Room versus Laboratory resource type in the admin editor
 - [x] Route laboratory create/delete operations to the labs collection and test both paths
 - [x] Document the actual authenticated preview verification state and remaining sign-in limitation, if any
+
+# Final Presentation Fix
+
+- [x] Add alternate timetable views for grid, room-centric, and faculty-centric inspection
+
+# Timetable View Closure
+
+- [x] Implement a true room-centric timetable view grouped into room/lab sections
+- [x] Implement a true faculty-centric timetable view grouped into faculty sections
+- [x] Validate distinct grid, room, and faculty timetable experiences
+
+# Final Verification Closure
+
+- [x] Run the timetable view-mode test in the project’s executed Vitest scope
+- [x] Document that browser mode switching remains unverified if external sign-in blocks interaction

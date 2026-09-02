@@ -9,7 +9,7 @@ The PRD-driven SmartSched revision has passed TypeScript validation, the automat
 | Check | Result |
 |---|---|
 | TypeScript (`pnpm check`) | Passed |
-| Vitest suite | Passed: 14 tests across 8 files |
+| Vitest suite | Passed: 15 tests across 9 files |
 | Production build (`pnpm build`) | Passed |
 | CP-SAT integration | Passed against deterministic 30-course dataset |
 | Room and laboratory CRUD | Passed, including collection-specific lab routing |
@@ -18,7 +18,7 @@ The PRD-driven SmartSched revision has passed TypeScript validation, the automat
 
 ## PRD implementation notes
 
-The backend includes deterministic institutional demo data, editable master entities, constraint weights, faculty availability validation, OR-Tools CP-SAT schedule generation, quality scoring, equipment utilization analytics, what-if simulation, minimum-disruption repair with a complete assignment diff, CSV/PDF/Excel exports, CSV validation, and admin-gated API procedures. The frontend exposes the SmartSched command center, timetable filters, resource editing, explicit room/laboratory controls, faculty availability controls, constraint-weight inputs, analytics, simulation, repair comparison, and export actions.
+The backend includes deterministic institutional demo data, editable master entities, constraint weights, faculty availability validation, OR-Tools CP-SAT schedule generation, quality scoring, equipment utilization analytics, what-if simulation, minimum-disruption repair with a complete assignment diff, CSV/PDF/Excel exports, CSV validation, and admin-gated API procedures. The frontend exposes the SmartSched command center, timetable filters, grid view, true room-centric grouped view, true faculty-centric grouped view, resource editing, explicit room/laboratory controls, faculty availability controls, constraint-weight inputs, analytics, simulation, repair comparison, and export actions.
 
 ## Deployment prerequisite
 
@@ -26,4 +26,4 @@ Development currently uses the project’s safe local operational adapter. Produ
 
 ## Browser limitation
 
-Visual preview verification passed for the command-center layout. Authenticated end-to-end browser mutation verification is still pending because the external sign-in flow remained on its human-verification challenge in the available browser session.
+Visual preview verification passed for the command-center layout. The executed view-mode test confirms the distinct grid, room-grouped, and faculty-grouped presentations. Authenticated end-to-end browser mutation verification remains pending because the external sign-in flow remained on its human-verification challenge in the available browser session.
