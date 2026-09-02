@@ -21,18 +21,22 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { Bot, CalendarDays, Database, FileUp, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
+import { BarChart3, Bot, CalendarDays, Database, Factory, FileUp, LayoutDashboard, ListChecks, LogOut, PanelLeft, Settings2 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Command center", path: "/" },
-  { icon: CalendarDays, label: "Weekly routine", path: "/?tab=calendar" },
-  { icon: Database, label: "Operational data", path: "/?tab=master" },
-  { icon: FileUp, label: "Routine imports", path: "/?tab=imports" },
-  { icon: Bot, label: "AI proposals", path: "/?tab=agent" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Database, label: "Data management", path: "/?view=data" },
+  { icon: ListChecks, label: "Generate schedule", path: "/?view=generate" },
+  { icon: CalendarDays, label: "Timetable", path: "/?view=timetable" },
+  { icon: Settings2, label: "Constraints", path: "/?view=constraints" },
+  { icon: BarChart3, label: "Quality & analytics", path: "/?view=analytics" },
+  { icon: Factory, label: "Schedule repair", path: "/?view=repair" },
+  { icon: Bot, label: "AI assistant", path: "/?view=ai" },
+  { icon: FileUp, label: "Routine imports", path: "/?view=imports" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -183,7 +187,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Lab allocator
+                    SmartSched
                   </span>
                 </div>
               ) : null}

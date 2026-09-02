@@ -7,6 +7,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
 import { DEPARTMENTS, parseRoutineText, store } from "./labStore";
+import { analytics, createCourse, createEquipment, createFaculty, createGroup, createRoom, deleteMaster, repairSchedule, runOptimizer, simulateUnavailable, smartStore, updateCourse, updateEquipment, updateFaculty, updateFacultyAvailability, updateGroup, updateRoom, validateCsv } from "./smartSchedStore";
 
 const departmentCode = z.enum(DEPARTMENTS);
 const dayOfWeek = z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]);
@@ -81,6 +82,32 @@ export const appRouter = router({
       }
       return store.addProposal({ prompt: input.prompt, explanation, allocationIds: [], proposedAllocations });
     }),
+  }),
+  smartSched: router({
+    dashboard: adminProcedure.query(() => ({ courses: smartStore.courses.length, faculty: smartStore.faculty.length, rooms: smartStore.rooms.length, labs: smartStore.labs.length, equipment: smartStore.equipment.length, studentGroups: smartStore.student_groups.length, scheduleQuality: smartStore.schedule.length ? analytics().metrics.quality : null, hardConstraintViolations: smartStore.schedule.length ? analytics().metrics.hardViolations : null })),
+    data: adminProcedure.query(() => smartStore),
+    updateCourse: adminProcedure.input(z.object({ id: z.string(), course_name: z.string().optional(), student_count: z.number().int().positive().optional(), duration_minutes: z.number().int().positive().optional(), required_room_type: z.string().optional(), required_equipment: z.array(z.string()).optional(), faculty_id: z.string().optional() })).mutation(({ input }) => updateCourse(input)),
+    updateFaculty: adminProcedure.input(z.object({ id: z.string(), name: z.string().optional(), maximum_hours_per_day: z.number().int().positive().optional(), availability: z.array(z.string()).optional(), preferred_slots: z.array(z.string()).optional() })).mutation(({ input }) => updateFaculty(input)),
+    updateRoom: adminProcedure.input(z.object({ id: z.string(), name: z.string().optional(), capacity: z.number().int().positive().optional(), room_type: z.string().optional(), building: z.string().optional(), available_days: z.array(z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])).optional(), available_time_slots: z.array(z.string()).optional(), equipment: z.array(z.string()).optional(), active: z.boolean().optional() })).mutation(({ input }) => updateRoom(input)),
+    updateEquipment: adminProcedure.input(z.object({ id: z.string(), name: z.string().optional(), quantity: z.number().int().nonnegative().optional(), location: z.string().optional(), available: z.boolean().optional() })).mutation(({ input }) => updateEquipment(input)),
+    updateStudentGroup: adminProcedure.input(z.object({ id: z.string(), name: z.string().optional(), semester: z.number().int().positive().optional(), student_count: z.number().int().positive().optional() })).mutation(({ input }) => updateGroup(input)),
+    validateCsv: adminProcedure.input(z.object({ kind: z.enum(["courses", "faculty", "rooms", "labs", "equipment", "student_groups"]), csv: z.string().min(3) })).mutation(({ input }) => validateCsv(input.kind, input.csv)),
+    createCourse: adminProcedure.input(z.object({ name: z.string().min(2) })).mutation(({ input }) => createCourse(input.name)),
+    createFaculty: adminProcedure.input(z.object({ name: z.string().min(2) })).mutation(({ input }) => createFaculty(input.name)),
+    createRoom: adminProcedure.input(z.object({ name: z.string().min(2), lab: z.boolean().default(false) })).mutation(({ input }) => createRoom(input.name, input.lab)),
+    createEquipment: adminProcedure.input(z.object({ name: z.string().min(2) })).mutation(({ input }) => createEquipment(input.name)),
+    createStudentGroup: adminProcedure.input(z.object({ name: z.string().min(2) })).mutation(({ input }) => createGroup(input.name)),
+    deleteMaster: adminProcedure.input(z.object({ kind: z.enum(["course", "faculty", "room", "lab", "equipment", "student_group"]), id: z.string() })).mutation(({ input }) => deleteMaster(input.kind, input.id)),
+    updateFacultyAvailability: adminProcedure.input(z.object({ id: z.string(), availability: z.array(z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])) })).mutation(({ input }) => updateFacultyAvailability(input.id, input.availability)),
+    constraints: adminProcedure.query(() => smartStore.constraints),
+    updateConstraints: adminProcedure.input(z.object({ constraints: z.array(z.object({ id: z.string(), enabled: z.boolean(), weight: z.number().nonnegative() })) })).mutation(({ input }) => { input.constraints.forEach(update => { const existing = smartStore.constraints.find(item => item.id === update.id); if (existing) { existing.enabled = update.enabled; existing.weight = update.weight; } }); return smartStore.constraints; }),
+    generate: adminProcedure.mutation(() => runOptimizer()),
+    schedule: adminProcedure.query(() => ({ schedule: smartStore.schedule, versions: smartStore.versions })),
+    quality: adminProcedure.query(() => analytics().metrics),
+    analytics: adminProcedure.query(() => analytics()),
+    simulate: adminProcedure.input(z.object({ resourceId: z.string(), resourceKind: z.enum(["room", "lab", "faculty"]), day: z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]), reason: z.string().min(2) })).mutation(({ input }) => simulateUnavailable(input.resourceId, input.resourceKind, input.day, input.reason)),
+    repair: adminProcedure.input(z.object({ resourceId: z.string(), resourceKind: z.enum(["room", "lab", "faculty"]), day: z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]), reason: z.string().min(2) })).mutation(({ input }) => repairSchedule({ resource_id: input.resourceId, resource_kind: input.resourceKind, day: input.day, reason: input.reason })),
+    exportCsv: adminProcedure.query(() => { const header = "Day,Time,Course,Course Code,Faculty,Student Group,Room,Duration\\n"; const body = smartStore.schedule.map(item => [item.day, `${item.start_time}-${item.end_time}`, item.course_name, item.course_code, item.faculty_id, item.student_group_id, item.room_name, item.duration_minutes].map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\\n"); return { filename: "smartsched-timetable.csv", csv: header + body }; }),
   }),
 });
 
