@@ -2,23 +2,23 @@ import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
-function createUserContext(role: "admin" | "user"): TrpcContext {
-  const now = new Date();
+function createPublicContext(): TrpcContext {
   return {
-    user: { id: 2, openId: `${role}-smartsched`, email: `${role}@example.com`, name: role, loginMethod: "test", role, createdAt: now, updatedAt: now, lastSignedIn: now },
+    user: null,
     req: { protocol: "https", headers: {} } as TrpcContext["req"],
     res: {} as TrpcContext["res"],
   };
 }
 
-describe("SmartSched authorization", () => {
-  it("blocks non-admin schedule generation and analytics", async () => {
-    const caller = appRouter.createCaller(createUserContext("user"));
-    await expect(caller.smartSched.generate()).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(caller.smartSched.analytics()).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(caller.smartSched.schedule()).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(caller.smartSched.simulate({ resourceId: "lab-2", resourceKind: "lab", day: "Wednesday", reason: "Maintenance" })).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(caller.smartSched.repair({ resourceId: "lab-2", resourceKind: "lab", day: "Wednesday", reason: "Maintenance" })).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(caller.smartSched.exportCsv()).rejects.toMatchObject({ code: "FORBIDDEN" });
+describe("SmartSched public access", () => {
+  it("allows unauthenticated visitors to load the workspace and schedule data", async () => {
+    const caller = appRouter.createCaller(createPublicContext());
+    await expect(caller.smartSched.dashboard()).resolves.toHaveProperty("courses", 30);
+    await expect(caller.smartSched.data()).resolves.toHaveProperty("faculty");
+    await expect(caller.smartSched.schedule()).resolves.toHaveProperty("schedule");
+    await expect(caller.smartSched.analytics()).resolves.toHaveProperty("metrics");
+    await expect(caller.smartSched.updateCourse({ id: "course-1", course_name: "Public Access Course" })).resolves.toHaveProperty("id", "course-1");
+    await expect(caller.smartSched.exportCsv()).resolves.toHaveProperty("filename", "smartsched-timetable.csv");
+    await expect(caller.smartSched.generate()).resolves.toHaveProperty("version");
   });
 });

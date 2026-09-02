@@ -96,3 +96,17 @@
 
 - [x] Run the timetable view-mode test in the project’s executed Vitest scope
 - [x] Document that browser mode switching remains unverified if external sign-in blocks interaction
+
+# Public Access Revision
+
+- [x] Remove the frontend sign-in gate from the SmartSched workspace
+- [x] Replace admin-only backend guards with public-access procedures across tRPC and REST
+- [x] Add tests proving unauthenticated visitors can load and use the public workspace and execute representative actions
+- [x] Update public-access documentation and security notes
+- [ ] Verify public preview and save a new checkpoint
+
+# Public Access Hardening
+
+- [x] Align remaining REST adapters with the public-access policy
+- [x] Add unauthenticated tests for schedule generation, safe mutation, and export
+- [x] Document that public write access is intentional demo mode and requires future protection for live institutional data
